@@ -7,26 +7,48 @@
 import React, { Component } from "react";
 import {
   AppRegistry,
+  Image,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
+
+class Product extends Component {
+  render() {
+    return(
+      <View style={styles.container}>
+        <ProductImage />
+        <ProductTitle />
+      </View>
+    );
+  }
+}
+
+class ProductImage extends Component {
+  render() {
+    return(
+      <Image
+        source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg" }}
+        style={{ width: 214, height: 300 }}
+      />
+    );
+  }
+}
+
+class ProductTitle extends Component {
+  render() {
+    return(
+      <Text style={styles.welcome}>
+        さまざまなバナナ
+      </Text>
+    );
+  }
+}
 
 class amakani extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{"\n"}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+      <Product/>
     );
   }
 }
