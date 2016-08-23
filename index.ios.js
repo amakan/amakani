@@ -5,11 +5,31 @@ import {
   StatusBar,
   TabBarIOS,
   Text,
+  TextInput,
+  TouchableHighlight,
   View,
   WebView,
 } from "react-native";
 
 class Header extends Component {
+  constructor(...args) {
+    super(...args);
+    this.state = { text: "" };
+  }
+
+  onChangeText(text) {
+    this.setState({ text });
+  }
+
+  onHomeButtonClicked() {
+    this.setState({ text: "" });
+    this.props.onHomeButtonClicked();
+  }
+
+  onSubmitEditing() {
+    this.props.onSearchRequested(this.state.text);
+  }
+
   render() {
     return(
       <View style={{
@@ -19,12 +39,29 @@ class Header extends Component {
         paddingRight: 12,
         paddingTop: 12 + 20,
       }}>
-        <StatusBar barStyle="light-content"/>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ alignItems: "center", flex: 1, flexDirection: "row" }}>
-            <Text style={{ color: "#FFF", fontSize: 16 }}>
-              amakan
-            </Text>
+            <TouchableHighlight onPress={this.onHomeButtonClicked.bind(this)}>
+              <Image source={require("./images/home-white-32x32.png")} onClick/>
+            </TouchableHighlight>
+            <TextInput
+              autoCorrect={false}
+              editable={true}
+              onChangeText={this.onChangeText.bind(this)}
+              onSubmitEditing={this.onSubmitEditing.bind(this)}
+              placeholder="Search"
+              style={{
+                backgroundColor: "#FFF",
+                borderRadius: 3,
+                marginLeft: 12,
+                paddingBottom: 4,
+                paddingLeft: 8,
+                paddingRight: 8,
+                paddingTop: 4,
+                flex: 1,
+              }}
+              value={this.state.text}
+            />
           </View>
         </View>
       </View>
@@ -32,85 +69,61 @@ class Header extends Component {
   }
 }
 
-class Home extends Component {
-  render() {
-    return(
-      <View style={{ flex: 1 }}>
-        <WebView
-           source={{ uri: "https://amakan.net/" }}
-           automaticallyAdjustContentInsets={false}
-         />
-      </View>
-    );
-  }
-}
-
-class MyPage extends Component {
-  render() {
-    return(
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>
-          マイページ
-        </Text>
-      </View>
-    );
-  }
-}
-
-class Settings extends Component {
-  render() {
-    return(
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>
-          設定
-        </Text>
-      </View>
-    );
-  }
-}
-
 class amakani extends Component {
+  static baseUrl = "http://localhost:3000";
+
   constructor(...args) {
     super(...args);
     this.state = {
+      loading: false,
       selectedTab: "home",
+      url: amakani.baseUrl,
     };
+  }
+
+  onHomeButtonClicked() {
+    this.setState({
+      url: amakani.baseUrl,
+    });
+  }
+
+  onNavigationStateChange (navigationState) {
+    this.setState({
+      loading: navigationState.loading,
+      url: navigationState.url,
+    });
+  }
+
+  onSearchRequested(text) {
+    this.setState({
+      url: `${amakani.baseUrl}/search?query=${text}`,
+    });
   }
 
   render() {
     return (
-      <TabBarIOS>
-        <TabBarIOS.Item
-          title="ホーム"
-          icon={require("./images/home.png")}
-          selected={this.state.selectedTab === "home"}
-          onPress={() => {
-            this.setState({ selectedTab: "home" });
+      <View style={{
+        flex:1
+      }}>
+        <StatusBar
+          barStyle="light-content"
+          networkActivityIndicatorVisible={this.state.loading}
+        />
+        <Header
+          onHomeButtonClicked={this.onHomeButtonClicked.bind(this)}
+          onSearchRequested={this.onSearchRequested.bind(this)}
+        />
+        <WebView
+          automaticallyAdjustContentInsets={false}
+          onNavigationStateChange={this.onNavigationStateChange.bind(this)}
+          source={{ uri: this.state.url }}
+          startInLoadingState={true}
+          style={{
+            backgroundColor: "#262F40",
+            flex: 1
           }}
-        >
-          <Home/>
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          title="マイページ"
-          icon={require("./images/user.png")}
-          selected={this.state.selectedTab === "my-page"}
-          onPress={() => {
-            this.setState({ selectedTab: "my-page" });
-          }}
-        >
-          <MyPage/>
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          title="設定"
-          icon={require("./images/cog.png")}
-          selected={this.state.selectedTab === "settings"}
-          onPress={() => {
-            this.setState({ selectedTab: "settings" });
-          }}
-        >
-          <Settings/>
-        </TabBarIOS.Item>
-      </TabBarIOS>
+        />
+      </View>
     );
   }
 }
