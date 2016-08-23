@@ -6,6 +6,7 @@ import {
   TabBarIOS,
   Text,
   View,
+  WebView,
 } from "react-native";
 
 class Header extends Component {
@@ -25,9 +26,6 @@ class Header extends Component {
               amakan
             </Text>
           </View>
-          <Image
-            source={require("./images/search-white-24x24.png")}
-          />
         </View>
       </View>
     );
@@ -38,12 +36,10 @@ class Home extends Component {
   render() {
     return(
       <View style={{ flex: 1 }}>
-        <Header/>
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text>
-            ホーム
-          </Text>
-        </View>
+        <WebView
+           source={{ uri: "https://amakan.net/" }}
+           automaticallyAdjustContentInsets={false}
+         />
       </View>
     );
   }
