@@ -1,75 +1,91 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from "react";
 import {
   AppRegistry,
-  Image,
-  StyleSheet,
+  TabBarIOS,
   Text,
   View,
 } from "react-native";
 
-class Product extends Component {
+class Home extends Component {
   render() {
     return(
-      <View style={styles.container}>
-        <ProductImage />
-        <ProductTitle />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>
+          ホーム
+        </Text>
       </View>
     );
   }
 }
 
-class ProductImage extends Component {
+class MyPage extends Component {
   render() {
     return(
-      <Image
-        source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg" }}
-        style={{ width: 214, height: 300 }}
-      />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>
+          マイページ
+        </Text>
+      </View>
     );
   }
 }
 
-class ProductTitle extends Component {
+class Settings extends Component {
   render() {
     return(
-      <Text style={styles.welcome}>
-        さまざまなバナナ
-      </Text>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>
+          設定
+        </Text>
+      </View>
     );
   }
 }
 
 class amakani extends Component {
+  constructor(...args) {
+    super(...args);
+    this.state = {
+      selectedTab: "home",
+    };
+  }
+
   render() {
     return (
-      <Product/>
+      <TabBarIOS>
+        <TabBarIOS.Item
+          title="ホーム"
+          icon={require("./images/home.png")}
+          selected={this.state.selectedTab === "home"}
+          onPress={() => {
+            this.setState({ selectedTab: "home" });
+          }}
+        >
+          <Home/>
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+          title="マイページ"
+          icon={require("./images/user.png")}
+          selected={this.state.selectedTab === "my-page"}
+          onPress={() => {
+            this.setState({ selectedTab: "my-page" });
+          }}
+        >
+          <MyPage/>
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+          title="設定"
+          icon={require("./images/cog.png")}
+          selected={this.state.selectedTab === "settings"}
+          onPress={() => {
+            this.setState({ selectedTab: "settings" });
+          }}
+        >
+          <Settings/>
+        </TabBarIOS.Item>
+      </TabBarIOS>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF",
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10,
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent("amakani", () => amakani);
